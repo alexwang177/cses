@@ -10,6 +10,10 @@ delta = {
 visited = [[False for _ in range(7)] for _ in range(7)]
 
 
+def valid(row, col, visited):
+    return row >= 0 and col >= 0 and row <= 6 and col <= 6 and not visited[row][col]
+
+
 def wall_pos(row, col, visited):
 
     if (row == 0 or row == 6) and \
@@ -27,17 +31,11 @@ def gen_num_paths(path, row, col, idx, visited):
 
     if idx == 48:
         if row == 6 and col == 0:
-            print("end")
+            # print("end")
             return 1
         return 0
 
     if row == 6 and col == 0:
-        return 0
-
-    if row < 0 or col < 0 or row > 6 or col > 6:
-        return 0
-
-    if visited[row][col]:
         return 0
 
     if wall_pos(row, col, visited):
@@ -48,20 +46,25 @@ def gen_num_paths(path, row, col, idx, visited):
 
     if c == '?':
         for d in delta.values():
-            visited[row][col] = True
-            num_paths += gen_num_paths(path, row +
-                                       d[0], col + d[1], idx + 1, visited)
-            visited[row][col] = False
+
+            if valid(row + d[0], col + d[1], visited):
+                visited[row + d[0]][col + d[1]] = True
+                num_paths += gen_num_paths(path, row +
+                                           d[0], col + d[1], idx + 1, visited)
+                visited[row + d[0]][col + d[1]] = False
 
     else:
         d = delta[c]
-        visited[row][col] = True
-        num_paths += gen_num_paths(path, row +
-                                   d[0], col + d[1], idx + 1, visited)
-        visited[row][col] = False
+
+        if valid(row + d[0], col + d[1], visited):
+            visited[row + d[0]][col + d[1]] = True
+            num_paths += gen_num_paths(path, row +
+                                       d[0], col + d[1], idx + 1, visited)
+            visited[row + d[0]][col + d[1]] = False
 
     return num_paths
 
 
 path = sys.stdin.readline().strip()
+visited[0][0] = True
 print(gen_num_paths(path, 0, 0, 0, visited))
