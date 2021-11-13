@@ -1,4 +1,5 @@
 import sys
+from bisect import bisect_right
 
 '''
 5 3
@@ -16,7 +17,7 @@ class MaxSegmentTree:
     def __init__(self, arr):
 
         while not MaxSegmentTree.is_pow_of_2(len(arr)):
-            arr.append(0)
+            arr.append(-1000000007)
 
         self.n = len(arr)
         n = self.n
@@ -49,13 +50,15 @@ class MaxSegmentTree:
 
     def get_max(self, l, r):
 
-        max_val = 0
+        max_val = -1000000007
 
         # find correct positions in tree array
         l += self.n
         r += self.n
 
         while l <= r:
+
+            # print(f"left {self.tree[l]} right {self.tree[r]}")
 
             # left pointer is right child
             if l % 2 == 1:
@@ -73,13 +76,58 @@ class MaxSegmentTree:
 
         return max_val
 
+    def query(self, l, r):
+        max_val = 0
 
-        # n, m = [int(x) for x in sys.stdin.readline().split(" ")]
-        # ticket = [int(x) for x in sys.stdin.readline().split(" ")]
-        # cust = [int(x) for x in sys.stdin.readline().split(" ")]
-ticket = [5, 8, 6, 3, 2, 7, 2, 6, 1, 4]
-tree = MaxSegmentTree(ticket)
+        # to find the sum in the range [l,r)
+        l += self.n
+        r += self.n
 
-print(len(tree.tree))
-print(tree.get_max(2, 5))
-print(tree.tree)
+        while l < r:
+
+            if ((l & 1) > 0):
+                max_val = max(max_val, self.tree[l])
+                l += 1
+
+            if ((r & 1) > 0):
+                r -= 1
+                max_val = max(max_val, self.tree[r])
+
+            l = l // 2
+            r = r // 2
+
+        return max_val
+
+
+n, m = [int(x) for x in sys.stdin.readline().split(" ")]
+ticket = [int(x) for x in sys.stdin.readline().split(" ")]
+cust = [int(x) for x in sys.stdin.readline().split(" ")]
+
+ticket.sort()
+# print(ticket)
+tree = MaxSegmentTree(list(range(n)))
+
+for c in cust:
+
+    # print(" ")
+
+    i = bisect_right(ticket, c)
+    # print(tree.tree)
+
+    if i == len(ticket) or ticket[i] > c:
+        i -= 1
+
+    # print(f"insertion: {i}")
+
+    if i == -1:
+        print(-1)
+    else:
+
+        idx = tree.get_max(0, i)
+        # print(f"idx: {idx}")
+
+        if idx == -1000000007:
+            print(-1)
+        else:
+            print(ticket[idx])
+            tree.update(idx, -1000000007)
