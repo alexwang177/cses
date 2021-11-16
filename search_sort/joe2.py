@@ -77,6 +77,24 @@ pos = (2 + 3) % 6 = 5
 v = 5
 ans = 6
 
+---------------------------------
+
+1 2 ( 3 ) 4 5 6 7
+1 2   3   4 5 6 7
+
+pos = 3
+
+1 2 4 5 6 7
+1 2 3 4 5 6
+
+pos -= 1 -> this simulates being at the position of the "deleted" element in the new array
+         -> or another way to think about it is we move (k+1) ahead, but we need to account
+         for the deleted element so we subtract one
+
+pos = (pos + k + 1) % l
+
+---------------------------------
+
 1 2 4 5 7
 l = 5
 pos = (4 + 3) % 5 = 2
@@ -89,12 +107,25 @@ pos = (1 + 3) % 4 = 0 -> 4
 v = 6
 ans = 7
 
+---------------------------------
+
+k = 2
+
+Algorithm:
+
+pos -= 1
+pos = (pos + k + 1) % l
+
 1 4 5 7
 1 2 3 4
 
-go from "7" to "5"
+go from pos "7" to pos "5"
 
-originally at position 4, 
+at position 4 in old array, we want to go to position 3 in new array
+
+
+
+---------------------------------
 
 1 4 5
 l = 3
@@ -122,14 +153,21 @@ for l in range(n, 0, -1):
 
     # print(f"pos {pos} length {l}")
 
+    # this weird case happens because pos is 1-indexed
     if pos == 0:
         pos = l
 
+    # pos is the 'mth' position we want to find
+    # i.e. get the index of the (pos)-th alive person
     v = tree.get_mth_pos(pos)
     # print(v, tree.tree)
 
     ans.append(v+1)
     tree.delete(v)
+
+    # update pos to account for deleted element
+    # we simulate being at the deleted element, while in the new array in next interation
+    # from this "deleted" pos, we move forward k+1
     pos -= 1
 
     # print(" ")
