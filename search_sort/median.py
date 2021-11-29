@@ -18,6 +18,10 @@ def switch(h1, h2):
 n, k = ria()
 arr = ria()
 
+if k == 1:
+    print(*arr)
+    sys.exit()
+
 small, large = [], []
 
 for i in range(k):
@@ -28,23 +32,34 @@ for _ in range(k//2):
 
 ans = [get_median(small)]
 
+print(" ")
+print(k-1)
+print(small)
+print(large)
+print(" ")
+
 for i in range(k, n):
 
     x = arr[i]
     prev = i - k
 
     if x >= large[0][0]:
+        # add to large heap
         heapq.heappush(large, (x, i))
 
-        # element to 'remove' is in small heap, so we need to add more to small heap
+        # add to small heap to maintain original heap sizes
         if arr[prev] <= large[0][0]:
             switch(large, small)
 
     else:
+        # add to small heap
         heapq.heappush(small, (-x, i))
 
+        # add to large heap to maintain original heap sizes
         if arr[prev] >= large[0][0]:
             switch(small, large)
+
+    # throw out invalid indices
 
     while small and small[0][1] <= prev:
         heapq.heappop(small)
@@ -52,11 +67,11 @@ for i in range(k, n):
     while large and large[0][1] <= prev:
         heapq.heappop(large)
 
-    # print(" ")
-    # print(i)
-    # print(small)
-    # print(large)
-    # print(" ")
+    print(" ")
+    print(i)
+    print(small)
+    print(large)
+    print(" ")
 
     ans.append(get_median(small))
 
