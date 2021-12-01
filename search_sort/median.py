@@ -32,46 +32,46 @@ for _ in range(k//2):
 
 ans = [get_median(small)]
 
-print(" ")
-print(k-1)
-print(small)
-print(large)
-print(" ")
+# print(" ")
+# print(k-1)
+# print(small)
+# print(large)
+# print(" ")
 
 for i in range(k, n):
 
     x = arr[i]
     prev = i - k
 
-    if x >= large[0][0]:
-        # add to large heap
-        heapq.heappush(large, (x, i))
+    # print(" ")
+    # print(i)
+    # print(small)
+    # print(large)
+    # print(" ")
 
-        # add to small heap to maintain original heap sizes
-        if arr[prev] <= large[0][0]:
-            switch(large, small)
+    old_large_top = large[0][0]
 
-    else:
-        # add to small heap
-        heapq.heappush(small, (-x, i))
+    # always push to small (push current to large and then push top of large to small)
+    heapq.heappush(large, (x, i))
+    switch(large, small)
 
-        # add to large heap to maintain original heap sizes
-        if arr[prev] >= large[0][0]:
-            switch(small, large)
+    if arr[prev] >= old_large_top:
+        # num to be removed is in large
+        # push top of small to large
+        switch(small, large)
 
     # throw out invalid indices
+    while large and large[0][1] <= prev:
+        heapq.heappop(large)
 
     while small and small[0][1] <= prev:
         heapq.heappop(small)
 
-    while large and large[0][1] <= prev:
-        heapq.heappop(large)
-
-    print(" ")
-    print(i)
-    print(small)
-    print(large)
-    print(" ")
+    # print(" ")
+    # print(i)
+    # print(small)
+    # print(large)
+    # print(" ")
 
     ans.append(get_median(small))
 
