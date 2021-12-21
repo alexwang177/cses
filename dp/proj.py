@@ -15,13 +15,7 @@ for _ in range(n):
     times.add(projects[-1][1])
 
 times = sorted(list(times))
-
-compressed = {}
-count = 1
-
-for t in times:
-    compressed[t] = count
-    count += 1
+compressed = {times[i]: i+1 for i in range(len(times))}
 
 end_to_projects = {}
 
