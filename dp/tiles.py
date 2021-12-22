@@ -21,6 +21,17 @@ def gen_strs(strs, s, n):
             gen_strs(strs, s + ch, n)
 
 
+def valid(i, n, m, s):
+
+    if i == 0 and 'b' in s:
+        return False
+
+    if i == m - 1 and 'a' in s:
+        return False
+
+    return True
+
+
 def compate(s1, s2):
 
     for i in range(len(s1)):
@@ -66,13 +77,15 @@ dp = [defaultdict(int) for _ in range(m)]
 for i in range(m):
 
     for s in strs:
-        if i == 0 and 'b' not in s:
-            dp[i][s] = 1
-        elif (i > 0 and i < m - 1) or (i == m - 1 and 'a' not in s):
-            for prev in strs:
-                if compate(prev, s):
-                    dp[i][s] += dp[i-1][prev]
-                    dp[i][s] %= MOD
+
+        if valid(i, n, m, s):
+            if i == 0:
+                dp[i][s] = 1
+            else:
+                for prev in strs:
+                    if compate(prev, s):
+                        dp[i][s] += dp[i-1][prev]
+                        dp[i][s] %= MOD
 
 ans = sum(dp[m - 1].values()) % MOD
 print(ans)
