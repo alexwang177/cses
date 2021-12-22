@@ -1,0 +1,86 @@
+import sys
+from collections import defaultdict
+
+
+def ria():
+    return [int(x) for x in sys.stdin.readline().split()]
+
+
+def gen_strs(strs, s, n):
+
+    if len(s) == n:
+        strs.append(s)
+        return
+
+    for c in 'abcd':
+        gen_strs(strs, s + c, n)
+
+
+def valid(i, n, m, s):
+
+    if s[0] == 'd' or s[n-1] == 'c':
+        return False
+
+    if i == 0 and 'b' in s:
+        return False
+
+    if i == m - 1 and 'a' in s:
+        return False
+
+    return True
+
+
+def compate(s1, s2):
+
+    for i in range(len(s1)):
+        c1 = s1[i]
+        c2 = s2[i]
+
+        if c1 == 'a' and c2 != 'b':
+            return False
+
+    return True
+
+
+'''
+dp[i][x] = number of ways considering rows [0 ... i] and row i has configuration "x"
+
+x is a string
+
+'a' = vertical, top
+'b' = vertical, bottom
+'c' = horizontal, left
+'d' = horizontal, right
+
+dp[i][x] = sum ( dp[i-1][y] ) for all configurations "y" compatible with "x", and "x" is valid 
+
+base case:
+
+dp[0][x] = 1 if "x" is valid
+dp[0][x] = 0 if "x" is invalid
+'''
+
+n, m = ria()
+MOD = (10**9)+7
+
+strs = []
+gen_strs(strs, '', n)
+# print(strs)
+
+dp = [defaultdict(int) for _ in range(m)]
+
+for i in range(m):
+
+    for s in strs:
+
+        if valid(i, n, m, s):
+            if i == 0:
+                dp[i][s] = 1
+            else:
+                for prev in strs:
+                    if compate(prev, s):
+                        dp[i][s] += dp[i-1][prev]
+                        dp[i][s] %= MOD
+
+ans = sum(dp[m-1].values()) % MOD
+print(ans)
