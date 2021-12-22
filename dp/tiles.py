@@ -9,11 +9,16 @@ def ria():
 def gen_strs(strs, s, n):
 
     if len(s) == n:
-        strs.append(s)
+
+        if s[0] != 'd' and s[-1] != 'c':
+            strs.append(s)
         return
 
-    for c in 'abcd':
-        gen_strs(strs, s + c, n)
+    if s and s[-1] == 'c':
+        gen_strs(strs, s + 'd', n)
+    else:
+        for ch in 'abc':
+            gen_strs(strs, s + ch, n)
 
 
 def valid(i, n, m, s):
@@ -27,6 +32,16 @@ def valid(i, n, m, s):
     if i == m - 1 and 'a' in s:
         return False
 
+    for i in range(len(s) - 1):
+        c1 = s[i]
+        c2 = s[i+1]
+
+        if c1 == 'c' and c2 != 'd':
+            return False
+
+        if c2 == 'd' and c1 != 'c':
+            return False
+
     return True
 
 
@@ -37,6 +52,9 @@ def compate(s1, s2):
         c2 = s2[i]
 
         if c1 == 'a' and c2 != 'b':
+            return False
+
+        if c2 == 'b' and c1 != 'a':
             return False
 
     return True
@@ -82,5 +100,5 @@ for i in range(m):
                         dp[i][s] += dp[i-1][prev]
                         dp[i][s] %= MOD
 
-ans = sum(dp[m-1].values()) % MOD
+ans = sum(dp[m - 1].values()) % MOD
 print(ans)
