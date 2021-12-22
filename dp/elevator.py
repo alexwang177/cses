@@ -21,28 +21,32 @@ def ria():
 
 n, cap = ria()
 weight = ria()
+m = 1 << n
+
+dp = [n + 1 for _ in range(m)]
+cw = [0 for _ in range(m)]
 
 # base case
-dp = [[n + 1, 0] for _ in range(1 << n)]
-dp[0] = [1, 0]
+dp[0] = 1
 
-for s in range(1 << n):
+for s in range(1, m):
 
     for p in range(n):
 
         if s & (1 << p):
 
-            prev = dp[s ^ (1 << p)]
-            min_trips = prev[0]
-            cur_elevator = prev[1]
+            prev = s ^ (1 << p)
+            min_trips = dp[prev]
+            cur_w = cw[prev]
 
-            if cur_elevator + weight[p] <= cap:
-                cur_elevator += weight[p]
+            if cur_w + weight[p] <= cap:
+                cur_w += weight[p]
             else:
                 min_trips += 1
-                cur_elevator = weight[p]
+                cur_w = weight[p]
 
-            dp[s] = min(dp[s], [min_trips, cur_elevator])
+            if min_trips < dp[s] or (min_trips == dp[s] and cur_w < cw[s]):
+                dp[s] = min_trips
+                cw[s] = cur_w
 
-# print(dp)
-print(dp[(1 << n) - 1][0])
+print(dp[m - 1])
