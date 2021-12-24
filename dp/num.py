@@ -1,4 +1,5 @@
 import sys
+from functools import lru_cache
 
 
 def ria():
@@ -6,50 +7,26 @@ def ria():
 
 
 '''
-
-dp[i][x] = number of valid numbers of length i, that end with digit x
-
-dp[0][x] = 0
-
-dp[i][x] =  sum ( dp[i-1][y] ) for all y != x, and x <= corresponding digit in the number we want to solve
-
 '''
 
 
-def solve(num):
+@lru_cache(None)
+def solve(s, idx, started, is_prefix, last_digit):
 
-    num = str(num)
-    n = len(num)
-
-    dp = [[0 for _ in range(10)] for _ in range(n + 1)]
-
-    for x in range(10):
-        dp[0][x] = 1
-
-    for i in range(1, n + 1):
-
-        for x in range(10):
-
-            # print(f"i: {i} x: {x}")
-
-            for y in range(10):
-
-                if x == y:
-                    continue
-
-                dp[i][x] += dp[i-1][y]
+    if idx == len(s):
+        return 1
 
     ans = 0
 
-    # for row in dp:
-    #     print(*row)
-
-    for x in range(10):
-        ans += dp[n][x]
+    for d in range(10 if not is_prefix else int(s[idx]) + 1):
+        if d != last_digit or not(d or started):
+            ans += solve(s, idx + 1, started or d,
+                         is_prefix and d == int(s[idx]), d)
 
     return ans
 
 
 a, b = ria()
-
-print(solve(b) - solve(a - 1))
+ans1 = 0 if a == 0 else solve(str(a - 1), 0, False, True, -1)
+ans2 = 1 if b == 0 else solve(str(b), 0, False, True, -1)
+print(ans2 - ans1)
