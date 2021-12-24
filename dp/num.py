@@ -7,6 +7,52 @@ def ria():
 
 
 '''
+
+dp[i][d][p][s] = number of valid numbers up for s[0...i], ending with digit d, p denotes if prefix or not, s denotes if started or not
+
+dp[i][d][p][s] = sum ( dp[i-1][d*][p*][s*] ) for valid d* p* s*
+where d* != d,
+
+p* determines the range of d values we evaluate,
+
+p is calculated based on p* and d
+
+
+base case:
+
+dp[0][d][True][s] = 1
+
+
+pseudocode:
+
+for i in range(n):
+
+    for d in range(10):
+
+        for d* in range(10):
+
+            for p* in [True, False]:
+
+                for s* in [True, False]:
+
+                    if d* == d and not (d == 0 and not started): continue
+
+                    if p* and d > s[i]: continue
+
+                    p = p* and d == int(s[i])
+
+                    s = s* or d
+
+                    dp[i][d][p][s] += dp[i-1][d*][p*][s*]
+
+ans = 0
+
+for d in range(10):
+    ans += dp[n-1][d][True]
+    ans += dp[n-1][d][False]
+
+return ans
+
 '''
 
 
