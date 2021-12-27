@@ -8,28 +8,34 @@ def ria():
 
 def bfs(grid, n, m, start_r, start_c):
 
-    q = deque([(start_r, start_c, '', 0)])
-    visited = [[False for _ in range(m)] for _ in range(n)]
+    q = deque([(start_r, start_c)])
+    directions = {"D": (1, 0), "U": (-1, 0), "R": (0, 1), "L": (0, -1)}
 
     while q:
+        r, c = q.popleft()
 
-        r, c, path, l = q.popleft()
+        for d, (dr, dc) in directions.items():
 
-        if r < 0 or c < 0 or r >= n or c >= m:
-            continue
+            nr = r + dr
+            nc = c + dc
+            if nr < 0 or nc < 0 or nr >= n or nc >= m:
+                continue
 
-        if visited[r][c] or grid[r][c] == '#':
-            continue
+            if grid[nr][nc] == '.':
+                q.append((nr, nc))
+                grid[nr][nc] = d
 
-        if grid[r][c] == 'B':
-            return (l, path)
+            if grid[nr][nc] == 'B':
+                path = [d]
 
-        visited[r][c] = True
+                while grid[r][c] != 'A':
+                    d = grid[r][c]
+                    path.append(d)
+                    dr, dc = directions[d]
+                    r -= dr
+                    c -= dc
 
-        q.append((r + 1, c, path + 'D', l + 1))
-        q.append((r - 1, c, path + 'U', l + 1))
-        q.append((r, c + 1, path + 'R', l + 1))
-        q.append((r, c - 1, path + 'L', l + 1))
+                return (len(path), ''.join(reversed(path)))
 
     return None
 
@@ -44,7 +50,6 @@ ans = None
 
 for i in range(n):
     for j in range(m):
-
         if grid[i][j] == 'A':
             ans = bfs(grid, n, m, i, j)
             break
