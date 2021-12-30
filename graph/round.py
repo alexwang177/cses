@@ -12,17 +12,28 @@ def dfs(start, visited, parent, adj):
     while s:
 
         node = s.pop()
+        visited.add(node)
 
         if node in adj:
             for nei in adj[node]:
 
                 if nei in visited:
-                    if node in parent and parent[node] != nei:
-                        print(node)
+                    if node in parent and nei != parent[node]:
+
+                        cycle_start = nei
+                        cycle = [cycle_start]
+                        cur = node
+
+                        while cur != cycle_start:
+                            cycle.append(cur)
+                            cur = parent[cur]
+
+                        cycle.append(cycle_start)
+                        print(len(cycle))
+                        print(*cycle)
                         return True
                 else:
                     s.append(nei)
-                    visited.add(nei)
                     parent[nei] = node
 
     return False
@@ -47,4 +58,7 @@ parent = {}
 
 for i in range(n+1):
     if i not in visited:
-        print(dfs(i, visited, parent, adj))
+        if dfs(i, visited, parent, adj):
+            sys.exit()
+
+print("IMPOSSIBLE")
