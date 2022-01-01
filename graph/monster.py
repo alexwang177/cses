@@ -6,7 +6,7 @@ def ria():
     return [int(x) for x in sys.stdin.readline().split()]
 
 
-delta = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+delta = {'R': (0, 1), 'L': (0, -1), 'D': (1, 0), 'U': (-1, 0)}
 
 
 def monster_bfs(start_r, start_c, aux, grid, n, m):
@@ -24,7 +24,7 @@ def monster_bfs(start_r, start_c, aux, grid, n, m):
             if aux[r][c] is None or aux[r][c] > level:
                 aux[r][c] = level
 
-            for dr, dc in delta:
+            for dr, dc in delta.values():
                 nr = r + dr
                 nc = c + dc
 
@@ -39,7 +39,6 @@ def monster_bfs(start_r, start_c, aux, grid, n, m):
 
 def bfs(start_r, start_c, aux, grid, n, m):
     q = deque([(start_r, start_c)])
-    visited = set()
     level = 0
 
     while q:
@@ -47,7 +46,6 @@ def bfs(start_r, start_c, aux, grid, n, m):
 
         for _ in range(size):
             r, c = q.popleft()
-            visited.add((r, c))
 
             if aux[r][c] <= level:
                 continue
@@ -57,15 +55,15 @@ def bfs(start_r, start_c, aux, grid, n, m):
                 print(level)
                 return True
 
-            for dr, dc in delta:
+            for text, (dr, dc) in delta.items():
                 nr = r + dr
                 nc = c + dc
 
                 if nr < 0 or nc < 0 or nr >= n or nc >= m or grid[nr][nc] != '.':
                     continue
 
-                if (nr, nc) not in visited:
-                    q.append((nr, nc))
+                grid[nr][nc] = text
+                q.append((nr, nc))
 
         level += 1
 
@@ -95,4 +93,7 @@ if not valid:
     print('NO')
 
 for row in aux:
+    print(*row)
+
+for row in grid:
     print(*row)
