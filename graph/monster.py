@@ -47,12 +47,23 @@ def bfs(start_r, start_c, aux, grid, n, m):
         for _ in range(size):
             r, c = q.popleft()
 
-            if aux[r][c] <= level:
+            if aux[r][c] and aux[r][c] <= level:
                 continue
 
             if r == 0 or c == 0 or r == n - 1 or c == m - 1:
                 print('YES')
                 print(level)
+
+                path = []
+                while grid[r][c] != 'A':
+                    path.append(grid[r][c])
+                    dr, dc = delta[grid[r][c]]
+                    r -= dr
+                    c -= dc
+
+                path.reverse()
+                print(*path, sep='')
+
                 return True
 
             for text, (dr, dc) in delta.items():
@@ -92,8 +103,8 @@ valid = bfs(start_r, start_c, aux, grid, n, m)
 if not valid:
     print('NO')
 
-for row in aux:
-    print(*row)
+# for row in aux:
+#     print(*row)
 
-for row in grid:
-    print(*row)
+# for row in grid:
+#     print(*row)
