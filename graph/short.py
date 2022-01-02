@@ -22,12 +22,20 @@ dist[1] = 0
 
 # tuple: (distance, node)
 pq = [(0, 1)]
+visited = set()
 
 while pq:
     cur_dist, node = heappop(pq)
 
+    if node in visited:
+        continue
+
+    visited.add(node)
+
     if node in adj:
         for nei, w in adj[node]:
+
+            # try to find a better path to neighbor
             if dist[nei] is None or cur_dist + w < dist[nei]:
                 dist[nei] = cur_dist + w
                 heappush(pq, (dist[nei], nei))
