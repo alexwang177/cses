@@ -19,5 +19,7 @@ for _ in range(m):
     adj[a].append(b, w)
     adj[b].append(a, w)
 
+dist = [[0 if i == j else None for i in range(n)] for j in range(n)]
+
 for _ in range(q):
     a, b = ria()
