@@ -5,7 +5,10 @@ def ria():
     return [int(x) for x in sys.stdin.readline().split()]
 
 
-def dfs(start, target_set, adj):
+MAX = 1 << 60
+
+
+def dfs(start, target_set, adj, dist):
     s = [start]
     visited = set()
 
@@ -13,7 +16,7 @@ def dfs(start, target_set, adj):
 
         node = s.pop()
 
-        if node in target_set:
+        if node in target_set and dist[node] < MAX:
             return True
 
         visited.add(node)
@@ -39,13 +42,16 @@ for _ in range(m):
 
     adj[b].append(a)
 
-MAX = 1 << 60
 dist = [MAX for _ in range(n + 1)]
 dist[1] = 0
 
 # bellman ford, n-1 iterations
 for _ in range(n):
     for a, b, w in edges:
+
+        if dist[a] == MAX:
+            continue
+
         dist[b] = min(dist[b], dist[a] + w)
 
 # n-th interation checks for negative cycle
@@ -56,6 +62,7 @@ for a, b, w in edges:
         cycle_node_set.add(a)
         cycle_node_set.add(b)
 
-reachable = dfs(n, cycle_node_set, adj)
+reachable = dfs(n, cycle_node_set, adj, dist)
+# print(dist)
 
 print(-1 if reachable else -dist[n])
