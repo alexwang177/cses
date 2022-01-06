@@ -21,10 +21,10 @@ dist = [None for _ in range(n + 1)]
 dist[1] = 0
 
 visited = set()
-pq = [(0, 1)]
+pq = [(0, 1, False)]
 
 while pq:
-    cur_dist, node = heappop(pq)
+    cur_dist, node, used = heappop(pq)
 
     if node in visited:
         continue
@@ -36,6 +36,11 @@ while pq:
 
             if dist[nei] is None or cur_dist + w < dist[nei]:
                 dist[nei] = cur_dist + w
-                heappush(pq, (dist[nei], nei))
+                heappush(pq, (dist[nei], nei, used))
+
+            if not used:
+                if dist[nei] is None or cur_dist + w // 2 < dist[nei]:
+                    dist[nei] = cur_dist + w // 2
+                    heappush(pq, (dist[nei], nei, True))
 
 print(dist[n])
