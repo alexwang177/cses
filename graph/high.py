@@ -52,7 +52,7 @@ for _ in range(n):
 cycle_node_set = set()
 
 for a, b, w in edges:
-    if dist[a] + w < dist[b] and b == n:
+    if dist[a] + w < dist[b]:
         cycle_node_set.add(a)
         cycle_node_set.add(b)
 
