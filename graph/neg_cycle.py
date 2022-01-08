@@ -45,6 +45,7 @@ else:
         # print(node)
 
         if node in visited:
+            cycle.append(node)
             final_node = node
             break
 
