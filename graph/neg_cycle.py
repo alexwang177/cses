@@ -41,9 +41,6 @@ else:
     final_node = None
 
     while True:
-
-        # print(node)
-
         if node in visited:
             cycle.append(node)
             final_node = node
