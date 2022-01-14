@@ -22,13 +22,11 @@ while pq and cnt[n] < k:
     cur_dist, node = heappop(pq)
     cnt[node] += 1
 
-    if cnt[node] > k:
-        continue
-
     if node == n:
         ans.append(cur_dist)
 
-    for nei, w in adj[node]:
-        heappush(pq, (cur_dist + w, nei))
+    if cnt[node] <= k:
+        for nei, w in adj[node]:
+            heappush(pq, (cur_dist + w, nei))
 
 print(*ans)
