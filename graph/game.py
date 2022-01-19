@@ -20,7 +20,6 @@ def topo(adj, back_adj, indegree, dp):
                 q.append(nei)
 
         for prev in back_adj[node]:
-
             dp[node] += dp[prev]
             dp[node] %= MOD
 
