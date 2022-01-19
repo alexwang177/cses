@@ -2,6 +2,7 @@ import sys
 from heapq import heappush, heappop
 
 MAX = 1 << 60
+MOD = (10**9) + 7
 
 
 def ria():
@@ -18,27 +19,38 @@ for _ in range(m):
 dist = [MAX for _ in range(n+1)]
 dist[1] = 0
 
-num_routes = 0
-max_edges = -1
-min_edges = n
+num_routes = [0 for _ in range(n+1)]
+num_routes[1] = 1
 
-# tuple (cur_dist, num_edges, node)
-pq = [(0, 0, 1)]
+max_edges = [0 for _ in range(n+1)]
+min_edges = [0 for _ in range(n+1)]
+
+visited = set()
+
+# tuple (cur_dist, node)
+pq = [(0, 1)]
 
 while pq:
-    cur_dist, num_edges, node = heappop(pq)
+    cur_dist, node = heappop(pq)
 
-    if node == n:
-        min_edges = min(min_edges, num_edges)
-        max_edges = max(max_edges, num_edges)
-        num_routes += 1
+    if node in visited:
+        continue
+    visited.add(node)
 
     for nei, w in adj[node]:
-        if cur_dist + w <= dist[nei]:
+        if cur_dist + w < dist[nei]:
             dist[nei] = cur_dist + w
-            heappush(pq, (cur_dist + w, num_edges + 1, nei))
+            num_routes[nei] = num_routes[node]
+            min_edges[nei] = min_edges[node] + 1
+            max_edges[nei] = max_edges[node] + 1
+            heappush(pq, (cur_dist + w, nei))
+        elif cur_dist + w == dist[nei]:
+            num_routes[nei] += num_routes[node]
+            num_routes[nei] %= MOD
+            min_edges[nei] = min(min_edges[nei], min_edges[node] + 1)
+            max_edges[nei] = max(max_edges[nei], max_edges[node] + 1)
 
 print(dist[n])
-print(num_routes)
-print(min_edges)
-print(max_edges)
+print(num_routes[n])
+print(min_edges[n])
+print(max_edges[n])
