@@ -50,7 +50,4 @@ while pq:
             min_edges[nei] = min(min_edges[nei], min_edges[node] + 1)
             max_edges[nei] = max(max_edges[nei], max_edges[node] + 1)
 
-print(dist[n])
-print(num_routes[n])
-print(min_edges[n])
-print(max_edges[n])
+print(dist[n], num_routes[n], min_edges[n], max_edges[n])
