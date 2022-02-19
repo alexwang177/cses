@@ -1,3 +1,4 @@
+from operator import pos
 import sys
 
 
@@ -92,6 +93,10 @@ queries = []
 for _ in range(q):
     t, a, b = sys.stdin.readline().split()
     queries.append([t, int(a), int(b)])
+
+    if t == '?':
+        pos_salaries.add(int(a))
+
     pos_salaries.add(int(b))
 
 pos_salaries = sorted(list(pos_salaries))
