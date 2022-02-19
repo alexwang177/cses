@@ -28,6 +28,9 @@ class SegmentTree:
     def is_pow_of_2(self, num):
         return (num & (num-1) == 0) and num != 0
 
+    def add(self, idx, val):
+        self.update(idx, self.tree[idx + self.n] + val)
+
     # idx is 0-indexed
     def update(self, idx, val):
 
@@ -80,3 +83,37 @@ def ria():
 2) create freq arr and seg tree on that arr
 3) answer range queries on tree / do point updates
 '''
+
+n, q = ria()
+salary = ria()
+pos_salaries = set(salary)
+queries = []
+
+for _ in range(q):
+    t, a, b = sys.stdin.readline().split()
+    queries.append([t, int(a), int(b)])
+    pos_salaries.add(int(b))
+
+pos_salaries = sorted(list(pos_salaries))
+compressed = {}
+
+for i, sal in enumerate(pos_salaries):
+    compressed[sal] = i
+
+freq = [0 for _ in range(len(compressed))]
+
+for sal in salary:
+    freq[compressed[sal]] += 1
+
+tree = SegmentTree(freq)
+
+for t, a, b, in queries:
+    if t == '?':
+        print(tree.get_sum(compressed[a], compressed[b]))
+    elif t == '!':
+        a -= 1
+        prev_sal = salary[a]
+        salary[a] = b
+
+        tree.add(compressed[prev_sal], -1)
+        tree.add(compressed[b], 1)
