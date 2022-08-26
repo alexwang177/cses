@@ -44,11 +44,6 @@ class Rope:
 
         return RopeNode(None, left_node, right_node)
 
-    def get_str(self):
-        leaf_vals = []
-        self._inorder(self.root, leaf_vals)
-        return ''.join(leaf_vals)
-
     def _inorder(self, node, leaf_vals):
         if not node:
             return
@@ -62,6 +57,28 @@ class Rope:
 
         self._inorder(node.right, leaf_vals)
 
+    def get_str(self):
+        leaf_vals = []
+        self._inorder(self.root, leaf_vals)
+        return ''.join(leaf_vals)
+
+    def index(self, i):
+        return self._index(self.root, i+1)
+    
+    def _index(self, node, i):
+
+        if i > node.weight:
+            return self._index(node.right, i - node.weight)
+
+        if i <= node.weight and node.val is not None:
+            return node.val[i-1]
+        
+        return self._index(node.left, i)
+
+
 raw_str = "Hello_my_name_is_Simon"
 rope = Rope(raw_str)
 print(rope.get_str())
+
+for i in range(len(raw_str)):
+    print(rope.index(i))
