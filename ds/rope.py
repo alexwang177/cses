@@ -1,3 +1,24 @@
+def printTree(root, markerStr="+- ", levelMarkers=[]):
+    emptyStr = " "*len(markerStr)
+    connectionStr = "|" + emptyStr[:-1]
+    level = len(levelMarkers)
+    mapper = lambda draw: connectionStr if draw else emptyStr
+    markers = "".join(map(mapper, levelMarkers[:-1]))
+    markers += markerStr if level > 0 else ""
+    print(f"{markers}{root}")
+
+    num_children = 0
+    children = []
+
+    if root.left is not None:
+        children.append(root.left)
+    if root.right is not None:
+        children.append(root.right)
+
+    for i, child in enumerate(children):
+        isLast = i == len(children) - 1
+        printTree(child, markerStr, [*levelMarkers, not isLast])
+
 class RopeNode:
     def __init__(self, val, left, right):
         self.left = left
@@ -97,15 +118,16 @@ class Rope:
 
 raw_str = "Hello_my_name_is_Simon"
 rope = Rope(raw_str)
-rope._inorder_print(rope.root)
+
+printTree(rope.root)
 print(rope.get_str())
 
 print('--------------------------------------\n')
 
-node_left, node_right = rope._split(rope.root, 6)
-rope._inorder_print(node_left)
+node_left, node_right = rope._split(rope.root, 11)
+printTree(node_left)
 
 print('--------------------------------------\n')
 
-rope._inorder_print(node_right)
+printTree(node_right)
 
