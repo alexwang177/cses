@@ -44,14 +44,20 @@ class Rope:
 
         return RopeNode(None, left_node, right_node)
 
+    def _inorder_print(self, node):
+        if not node:
+            return
+
+        self._inorder_print(node.left)
+        print(f'{node}\n')
+        self._inorder_print(node.right)
+
     def _inorder(self, node, leaf_vals):
         if not node:
             return
 
         self._inorder(node.left, leaf_vals)
         
-        print(f'{node}\n')
-
         if node.val is not None:
             leaf_vals.append(node.val)
 
@@ -75,10 +81,31 @@ class Rope:
         
         return self._index(node.left, i)
 
+    def _concat(self, node_1, node_2):
+        return RopeNode(None, node_1, node_2)
+
+    def _split(self, node, i):
+
+        if i < node.weight:
+            lhs, rhs = self._split(node.left, i)
+            return (lhs, self._concat(rhs, node.right))
+        elif i > node.weight:
+            lhs, rhs = self._split(node.right, i - node.weight)
+            return (self._concat(node.left, lhs), rhs)
+        else:
+            return (node.left, node.right)
 
 raw_str = "Hello_my_name_is_Simon"
 rope = Rope(raw_str)
+rope._inorder_print(rope.root)
 print(rope.get_str())
 
-for i in range(len(raw_str)):
-    print(rope.index(i))
+print('--------------------------------------\n')
+
+node_left, node_right = rope._split(rope.root, 6)
+rope._inorder_print(node_left)
+
+print('--------------------------------------\n')
+
+rope._inorder_print(node_right)
+
