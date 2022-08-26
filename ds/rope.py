@@ -7,7 +7,6 @@ def printTree(root, markerStr="+- ", levelMarkers=[]):
     markers += markerStr if level > 0 else ""
     print(f"{markers}{root}")
 
-    num_children = 0
     children = []
 
     if root.left is not None:
@@ -105,7 +104,17 @@ class Rope:
     def _concat(self, node_1, node_2):
         return RopeNode(None, node_1, node_2)
 
+    def _split_leaf(self, leaf, i):
+        leaf_left = RopeNode(leaf.val[:i], None, None)
+        leaf_right = RopeNode(leaf.val[i:], None, None)
+        return (leaf_left, leaf_right)
+
     def _split(self, node, i):
+
+
+        # i is in middle of leaf node's val
+        if i < node.weight and node.val is not None:
+            return self._split_leaf(node, i)
 
         if i < node.weight:
             lhs, rhs = self._split(node.left, i)
@@ -124,7 +133,7 @@ print(rope.get_str())
 
 print('--------------------------------------\n')
 
-node_left, node_right = rope._split(rope.root, 11)
+node_left, node_right = rope._split(rope.root, 7)
 printTree(node_left)
 
 print('--------------------------------------\n')
