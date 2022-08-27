@@ -137,6 +137,22 @@ class Rope:
         new_rope = Rope(new_str)
         return Rope(root=self._concat(new_rope.root, self.root))
 
+    def insert(self, new_str, i):
+
+        if i < 0 or i >= self.root.length:
+            raise Exception('Invalid index')
+
+        if i == 0:
+            return self.prepend(new_str)
+
+        if i == self.root.length:
+            return self.append(new_str)
+
+        lhs, rhs = self._split(self.root, i)
+        new_rope = Rope(new_str)
+
+        return Rope(root=self._concat(self._concat(lhs, new_rope.root), rhs))
+
 raw_str = "Hello_my_name_is_Simon"
 rope = Rope(raw_str)
 
@@ -158,4 +174,14 @@ rope = rope.append("And_my_name_is_Alex!")
 rope = rope.prepend("This_is_the_beginning_____")
 printTree(rope.root)
 print(rope.get_str())
+
+print('--------------------------------------\n')
+
+rope = rope.insert("xxxxxxxxxxxxxxxxxxxx", 45)
+printTree(rope.root)
+print(rope.get_str())
+
+
+
+
 
