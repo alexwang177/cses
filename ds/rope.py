@@ -46,9 +46,13 @@ class RopeNode:
         return f'val: {self.val} weight: {self.weight}'
     
 class Rope:
-    def __init__(self, str, leaf_size=5):
+    def __init__(self, str=None, root=None, leaf_size=5):
         self.leaf_size = leaf_size
-        self.root = self._build_tree(str, 0, len(str))
+
+        if root is not None:
+            self.root = root
+        else:
+            self.root = self._build_tree(str, 0, len(str))
 
     def _build_tree(self, str, lo, hi):
         
@@ -125,6 +129,10 @@ class Rope:
         else:
             return (node.left, node.right)
 
+    def append(self, new_str):
+        new_rope = Rope(new_str)
+        return Rope(root=self._concat(self.root, new_rope.root))
+
 raw_str = "Hello_my_name_is_Simon"
 rope = Rope(raw_str)
 
@@ -139,4 +147,10 @@ printTree(node_left)
 print('--------------------------------------\n')
 
 printTree(node_right)
+
+print('--------------------------------------\n')
+
+rope = rope.append("And_my_name_is_Alex!")
+printTree(rope.root)
+print(rope.get_str())
 
