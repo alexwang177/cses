@@ -153,6 +153,12 @@ class Rope:
 
         return Rope(root=self._concat(self._concat(lhs, new_rope.root), rhs))
 
+    def delete(self, i, length):
+        lhsA, _ = self._split(self.root, i)
+        _, rhsB = self._split(self.root, i + length)
+
+        return Rope(root=self._concat(lhsA, rhsB))
+
 raw_str = "Hello_my_name_is_Simon"
 rope = Rope(raw_str)
 
@@ -180,6 +186,13 @@ print('--------------------------------------\n')
 rope = rope.insert("xxxxxxxxxxxxxxxxxxxx", 45)
 printTree(rope.root)
 print(rope.get_str())
+
+print('--------------------------------------\n')
+
+rope = rope.delete(5, 3)
+print(rope.get_str())
+
+
 
 
 
