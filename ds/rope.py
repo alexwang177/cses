@@ -133,6 +133,10 @@ class Rope:
         new_rope = Rope(new_str)
         return Rope(root=self._concat(self.root, new_rope.root))
 
+    def prepend(self, new_str):
+        new_rope = Rope(new_str)
+        return Rope(root=self._concat(new_rope.root, self.root))
+
 raw_str = "Hello_my_name_is_Simon"
 rope = Rope(raw_str)
 
@@ -151,6 +155,7 @@ printTree(node_right)
 print('--------------------------------------\n')
 
 rope = rope.append("And_my_name_is_Alex!")
+rope = rope.prepend("This_is_the_beginning_____")
 printTree(rope.root)
 print(rope.get_str())
 
